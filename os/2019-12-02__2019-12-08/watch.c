@@ -18,9 +18,10 @@
 #include <err.h>
 #include <errno.h>
 #include <string.h>
+#include <signal.h>
+#define _POSIX_SOURCE
 
 int watch(char *const argv[]);
-int run_command(char *const argv[]);
 
 int main(int argc, char *const argv[]) {
     return watch(argv);
@@ -34,38 +35,28 @@ int watch(char *const argv[]) {
     // char *const argv[] - command to be executed
     //------------------------------------------------------------------------
     while (1) {
-        if (run_command(argv) == -1) {
-            printf("fork: %s\n", strerror(errno));
+        int status;
+        pid_t pid = fork();
+
+        if (pid < 0) {
+            status = -1;
+        } else if (pid == 0) {
+            char *const *passed_args = argv + 1;
+            if (execvp (argv[1], passed_args) == -1) {
+                perror (argv[1]);
+                return status;
+            };
+        } else {
+            if (waitpid (pid, &status, 0) != pid) {
+                status = -1;
+            }
+        }
+        if (status == -1) {
+            perror ("fork");
         };
+
         sleep(2);
     }
 
     return 0;
-}
-
-int run_command(char *const argv[]) {
-    //------------------------------------------------------------------------
-    // FUNCTION: run_comand
-    // Forks a new process and runs the passed command.
-    // PARAMETERS:
-    // char *const argv[] - command to be executed
-    //------------------------------------------------------------------------
-    int status;
-    pid_t pid = fork();
-    
-    if (pid < 0) {
-        status = -1;
-    } else if (pid == 0) {
-
-        char *const *passed_args = argv + 1;
-        if (execvp (argv[1], passed_args) == -1) {
-            warnx("No such file or directory");
-        };
-    } else {
-        if (waitpid (pid, &status, 0) != pid) {
-            status = -1;
-        }
-    }
-
-    return status;
 }
