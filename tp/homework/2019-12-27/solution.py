@@ -22,18 +22,19 @@ class TicTacToeBoard:
         return self.board[item]
 
     def __setitem__(self, item, value):
-        if self.board[item] is not ' ':
-            raise self.InvalidMove
+        if item not in self.board.keys():
+            raise self.InvalidKey
 
         if value not in ['O', 'X']:
             raise self.InvalidValue
 
-        if item not in self.board.keys():
-            raise self.InvalidKey
+        if self.board[item] is not ' ':
+            raise self.InvalidMove
 
         if self.previous is value:
             raise self.NotYourTurn
 
+        self.previous = value
         self.board[item] = value
 
     def __str__(self):
