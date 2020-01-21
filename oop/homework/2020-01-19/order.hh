@@ -5,11 +5,13 @@
 #include "item.hh"
 #include "user.hh"
 
+enum class OrderStatus { New, Accepted, Sent };
+
 class Order {
     unsigned int id;
     User ordered_by;
     std::map<Item, unsigned int> items_ordered;
-    std::string status;
+    OrderStatus status;
 
 public:
     Order(unsigned int id, User ordered_by, std::map<Item, unsigned int> items_ordered);
@@ -22,8 +24,9 @@ public:
 
     std::map<Item, unsigned int> get_items_ordered() const;
 
-    std::string const& get_status() const;
-    void set_status(std::string status);
+    OrderStatus const& get_status() const;
+
+    void set_status(OrderStatus status);
 };
 
 #endif

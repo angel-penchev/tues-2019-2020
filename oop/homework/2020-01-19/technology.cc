@@ -6,7 +6,7 @@ Technology::Technology(
     unsigned int supply,
     Supplier supplier,
     unsigned int delivery_time,
-    std::string type,
+    TechnologyType type,
     unsigned int warranty,
     unsigned int weight)
     :

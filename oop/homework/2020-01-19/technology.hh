@@ -1,11 +1,12 @@
 #ifndef TECHNOLOGY_HH
 #define TECHNOLOGY_HH
 
-// #include <map>
 #include "item.hh"
 
+enum class TechnologyType { WhiteElectronics, BlackElectronics, Consumable };
+
 class Technology : public Item {
-    std::string type;
+    TechnologyType type;
     unsigned int warranty;
     unsigned int weight;
 
@@ -16,7 +17,7 @@ public:
         unsigned int supply,
         Supplier supplier,
         unsigned int delivery_time,
-        std::string type,
+        TechnologyType type,
         unsigned int warranty,
         unsigned int weight);
 };

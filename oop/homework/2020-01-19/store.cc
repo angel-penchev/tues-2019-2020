@@ -51,10 +51,10 @@ void Store::create_order(Order const& order) {
 std::pair<double, unsigned int> Store::accept_order(unsigned int order_id) {
     for (auto i : this->orders) {
         if (i.get_id() == order_id) {
-            if (i.get_status() != "New") {
+            if (i.get_status() != OrderStatus::New) {
                 throw ErrorOrderStatusError();
             }
-            i.set_status("Approved");
+            i.set_status(OrderStatus::Accepted);
             
             std::pair<double, unsigned int> result = {0, 0};
             for (auto const& x : i.get_items_ordered()) {
@@ -74,10 +74,10 @@ std::pair<double, unsigned int> Store::accept_order(unsigned int order_id) {
 void Store::send_order(unsigned int order_id) {
     for (auto i : this->orders) {
         if (i.get_id() == order_id) {
-            if (i.get_status() != "Approved") {
+            if (i.get_status() != OrderStatus::Accepted) {
                 throw ErrorOrderStatusError();
             }
-            i.set_status("Sent");
+            i.set_status(OrderStatus::Sent);
             return;
         }
     }
