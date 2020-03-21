@@ -5,8 +5,8 @@ Store::Store(std::vector<User> users, std::vector<Item> items, std::vector<Order
 
 void Store::add_user(User const &user) {
     for (auto i : this->users) {
-        if (i.get_username() == user.get_username()) {
-            throw ErrorUsernameAlreadyExsists();
+        if (i.get_username() == user.get_username() || i.get_id() == user.get_id()) {
+            throw ErrorUserAlreadyExsists();
         }
     }
 
@@ -14,6 +14,12 @@ void Store::add_user(User const &user) {
 }
 
 void Store::add_item(Item const& item) {
+    for (auto i : this->items) {
+        if (i.get_name() == item.get_name() && i.get_supplier().get_name() == item.get_supplier().get_name()) {
+            i.set_supply(i.get_supply() + item.get_supply());
+            return;
+        }
+    }
     this->items.push_back(item);
 }
 
@@ -37,7 +43,7 @@ void Store::create_order(Order const& order) {
 
     for (auto i : order.get_items_ordered()) {
         for (auto j : this->items) {
-            if (i.first.get_name() == j.get_name()) {
+            if (i.first->get_name() == j.get_name()) {
                 if (i.second > j.get_supply()) {
                     throw ErrorOrderedMoreThanAvailableSupply();
                 }
@@ -58,9 +64,9 @@ std::pair<double, unsigned int> Store::accept_order(unsigned int order_id) {
             
             std::pair<double, unsigned int> result = {0, 0};
             for (auto const& x : i.get_items_ordered()) {
-                result.first += x.first.get_price();
-                if (result.second < x.first.get_delivery_time()) {
-                    result.second = x.first.get_delivery_time();
+                result.first += x.first->get_price();
+                if (result.second < x.first->get_delivery_time()) {
+                    result.second = x.first->get_delivery_time();
                 }
             }
 
@@ -82,7 +88,7 @@ void Store::send_order(unsigned int order_id) {
         }
     }
 
-    throw Store::ErrorOrderDoesNotExsist();
+    throw ErrorOrderDoesNotExsist();
 }
 
 std::vector<Order const*> Store::get_orders_by_user(unsigned int user_id) const {

@@ -21,6 +21,7 @@ public:
     double const& get_price() const;
 
     unsigned int const&  get_supply() const;
+    void set_supply(unsigned int supply);
 
     Supplier const& get_supplier() const;
 

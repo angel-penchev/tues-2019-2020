@@ -19,10 +19,10 @@ int main() {
     };
 
     std::vector<Order> orders = {
-        Order(0, users[1], std::map<Item, unsigned int>({{items[0], 1}})),
-        Order(1, users[0], std::map<Item, unsigned int>({{items[2], 1}, {items[4], 2}})),
-        Order(2, users[2], std::map<Item, unsigned int>({{items[1], 10}})),
-        Order(3, users[0], std::map<Item, unsigned int>({{items[3], 1}}))
+        Order(0, users[1], std::map<Item*, unsigned int>({{&items[0], 1}})),
+        Order(1, users[0], std::map<Item*, unsigned int>({{&items[2], 1}, {&items[4], 2}})),
+        Order(2, users[2], std::map<Item*, unsigned int>({{&items[1], 10}})),
+        Order(3, users[0], std::map<Item*, unsigned int>({{&items[3], 1}}))
     };
     
     Store store = Store(users, items, orders);

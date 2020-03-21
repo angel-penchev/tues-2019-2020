@@ -12,7 +12,7 @@ class Store {
     std::vector<Order> orders;
 
 public:
-    class ErrorUsernameAlreadyExsists {};
+    class ErrorUserAlreadyExsists {};
     class ErrorOrderIdAlreadyExsists {};
     class ErrorUserDoesNotExsist {};
     class ErrorOrderedMoreThanAvailableSupply {};

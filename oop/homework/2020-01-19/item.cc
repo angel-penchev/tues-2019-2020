@@ -19,6 +19,10 @@ unsigned int const& Item::get_supply() const {
     return this->supply;
 }
 
+void Item::set_supply(unsigned int supply) {
+    this->supply = supply;
+}
+
 Supplier const& Item::get_supplier() const {
     return this->supplier;
 }
