@@ -52,7 +52,11 @@ int main(int argc, char *argv[]) {
 
     pthread_mutex_destroy(&balance_mutex);
 
-    printf("Remaining money: %d\n", balance);
+    if (balance) {
+        printf("Remaining money: %d\n", balance);
+    } else {
+        printf("BANKRUPT!\n");
+    }
 
     return 0;
 }
@@ -61,10 +65,14 @@ void *deposit(void *arg) {
     int id = *(int*) arg;
     for (int i = 0; i < TRANSACTION_AMOUNT; i++) {
         pthread_mutex_lock(&balance_mutex);
+        if (balance <= 0) {
+            pthread_mutex_unlock(&balance_mutex);
+            break;
+        }
         balance += TRANSACTION_VALUE;
         printf("Banker %d deposited $%d to the bank account\n", id, TRANSACTION_VALUE);
-        sleep(2);
         pthread_mutex_unlock(&balance_mutex);
+        sleep(2);
     }
     pthread_exit(NULL);
 }
@@ -73,10 +81,14 @@ void *withdraw(void *arg) {
     int id = *(int*) arg;
     for (int i = 0; i < TRANSACTION_AMOUNT; i++) {
         pthread_mutex_lock(&balance_mutex);
+        if (balance <= 0) {
+            pthread_mutex_unlock(&balance_mutex);
+            break;
+        }
         balance -= TRANSACTION_VALUE;
         printf("Banker %d withrawed $%d from the bank account\n", id, TRANSACTION_VALUE);
-        sleep(2);
         pthread_mutex_unlock(&balance_mutex);
+        sleep(2);
     }
     pthread_exit(NULL);
 }
